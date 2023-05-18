@@ -1,0 +1,6 @@
+server:
+  port: 8085
+rpc:
+  registry:
+    protocol: nacos
+    address: 127.0.0.1:8848

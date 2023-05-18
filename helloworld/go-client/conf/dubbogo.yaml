@@ -1,0 +1,10 @@
+dubbo:
+  registries:
+    xds:
+      protocol: xds
+      address: istiod.istio-system.svc.cluster.local:15010
+  consumer:
+    references:
+      GreeterClientImpl:
+        protocol: tri
+        interface: "" # read from stub
