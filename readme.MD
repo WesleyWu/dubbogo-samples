@@ -1,6 +1,14 @@
 # DubboGo Samples 
 
-## helloworld
+## 准备工作
+
+### 安装 buf
+参考文档：https://buf.build/docs/installation
+
+### 安装 dubbogo-cli
+参考文档：https://cn.dubbo.apache.org/zh-cn/overview/mannual/golang-sdk/quickstart/install/#3-%E5%AE%89%E8%A3%85-dubbogo-cli-%E4%BB%A5%E5%8F%8A%E7%9B%B8%E5%85%B3%E6%8F%92%E4%BB%B6
+
+## helloworld 示例
 ### go-server
 dubbogo 微服务 provider，用Go语言实现，支持
 - 本地运行，服务注册到 etcdv3，可以换成 nacos/polaris 等
