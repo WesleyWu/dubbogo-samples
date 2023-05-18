@@ -2,11 +2,30 @@
 
 ## 准备工作
 
-### 安装 buf
-参考文档：https://buf.build/docs/installation
+### 安装 Go 环境
 
 ### 安装 dubbogo-cli
+目的是为了安装 protoc-gen-go-triple 命令行，用于生成支持 triple 协议的Go代码
+
 参考文档：https://cn.dubbo.apache.org/zh-cn/overview/mannual/golang-sdk/quickstart/install/#3-%E5%AE%89%E8%A3%85-dubbogo-cli-%E4%BB%A5%E5%8F%8A%E7%9B%B8%E5%85%B3%E6%8F%92%E4%BB%B6
+
+### 安装 etcd v3 (本机部署) 
+可以换成 zookeeper / nacos / polaris
+
+### 安装容器环境 (k8s部署)
+本机 docker、helm、kubectl 环境已安装。
+
+k8s 上需要安装 istio
+参见：https://cn.dubbo.apache.org/zh-cn/overview/mannual/golang-sdk/tutorial/governance/service-mesh/istio/
+
+### 安装 buf
+用于替代 protoc-gen-xxx 的代码生成工具
+
+参考文档：https://buf.build/docs/installation
+
+### 安装 make
+Windows: https://tehub.com/a/aCYp1uw0tG
+Mac: `brew install make`
 
 ## helloworld 示例
 ### go-server
