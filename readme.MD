@@ -38,6 +38,9 @@ dubbogo 微服务 provider，用Go语言实现，支持
 
 #### 安装部署
 参考文档：https://cn.dubbo.apache.org/zh-cn/overview/mannual/golang-sdk/tutorial/governance/service-mesh/deploy
+
+如果使用私有仓库，请参看：https://kubernetes.io/zh-cn/docs/tasks/configure-pod-container/pull-image-private-registr
+
 ```shell
 make build
 make deploy

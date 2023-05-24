@@ -1,9 +1,12 @@
 dubbo:
   registries:
-    demoZK:
-      protocol: etcdv3
-      address: 127.0.0.1:2379
-      timeout: 3s
+    xds:
+      protocol: xds
+      address: localhost:15010
+#    demoZK:
+#      protocol: etcdv3
+#      address: 127.0.0.1:2379
+#      timeout: 3s
   consumer:
     references:
       GreeterClientImpl:

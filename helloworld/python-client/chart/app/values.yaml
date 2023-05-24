@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: ccr.ccs.tencentyun.com/wumengye/dubbo-go-python-client
   pullPolicy: Always
-  tag: "1.0.2"
+  tag: "1.0.11"
 
 # Dubbo-go-mesh version control labels
 version:
@@ -12,6 +12,10 @@ version:
 
 container:
   env:
+    - name: POD_IP
+      valueFrom:
+        fieldRef:
+          fieldPath: status.podIP
     - name: POD_NAME
       valueFrom:
         fieldRef:
@@ -20,8 +24,10 @@ container:
       valueFrom:
         fieldRef:
           fieldPath: metadata.namespace
-    - name: GREETER_SERVICE_ENDPOINT
-      value: "dubbo-go-server.castbox.svc.cluster.local:20000"
+    - name: SERVICE_ENDPOINT
+      value: xds:///helloworld-dubbogo:8001
+    - name: GRPC_XDS_BOOTSTRAP
+      value: xds_bootstrap.json
   ports:
     - name: uvicorn
       containerPort: 5000
@@ -45,7 +51,7 @@ fullnameOverride: ""
 
 serviceAccount:
   # Specifies whether a service account should be created
-  create: true
+  create: false
   # Annotations to add to the service account
   annotations: {}
   # The name of the service account to use.

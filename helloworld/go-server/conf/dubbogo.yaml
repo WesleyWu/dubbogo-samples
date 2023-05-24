@@ -1,8 +1,8 @@
 dubbo:
-  registries:
-    xds:
-      protocol: xds
-      address: istiod.istio-system.svc.cluster.local:15010
+#  registries:
+#    xds:
+#      protocol: xds
+#      address: istiod.istio-system.svc.cluster.local:15010
   protocols:
     triple:
       name: tri

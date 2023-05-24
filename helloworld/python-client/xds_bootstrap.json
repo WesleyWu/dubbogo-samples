@@ -1,0 +1,27 @@
+{
+  "xds_servers": [
+    {
+      "server_uri": "trafficdirector.googleapis.com:443",
+      "channel_creds": [
+        {
+          "type": "google_default"
+        }
+      ],
+      "server_features": [
+        "xds_v3"
+      ]
+    }
+  ],
+  "node": {
+    "id": "projects/17018751276/networks/default/nodes/1abb650b-b1c1-4f7e-ac00-116fc1921cb9",
+    "cluster": "cluster",
+    "metadata": {
+      "INSTANCE_IP": "{POD_IP}",
+      "TRAFFICDIRECTOR_GCP_PROJECT_NUMBER": "17018751276",
+      "TRAFFICDIRECTOR_NETWORK_NAME": "default"
+    },
+    "locality": {
+      "zone": "us-central1-a"
+    }
+  }
+}

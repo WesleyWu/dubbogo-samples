@@ -1,5 +1,5 @@
 IMAGE = ccr.ccs.tencentyun.com/wumengye/dubbo-go-server
-TAG = 1.0.2
+TAG = 1.0.4
 HELM_INSTALL_NAME = dubbo-go-server-v1
 
 build-amd64-app:
@@ -23,10 +23,10 @@ remove:
 	helm uninstall ${HELM_INSTALL_NAME}
 
 deploy:
-	helm install ${HELM_INSTALL_NAME} ./chart/app
+	helm install ${HELM_INSTALL_NAME} ./chart/gke
 
 upgrade:
-	helm upgrade ${HELM_INSTALL_NAME} ./chart/app
+	helm upgrade ${HELM_INSTALL_NAME} ./chart/gke
 
 deploy-nacos-env:
 	helm install nacos ./chart/nacos_env
