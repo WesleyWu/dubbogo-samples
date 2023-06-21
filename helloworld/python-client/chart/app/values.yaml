@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: ccr.ccs.tencentyun.com/wumengye/dubbo-go-python-client
   pullPolicy: Always
-  tag: "1.0.11"
+  tag: "1.0.12"
 
 # Dubbo-go-mesh version control labels
 version:
@@ -25,24 +25,24 @@ container:
         fieldRef:
           fieldPath: metadata.namespace
     - name: SERVICE_ENDPOINT
-      value: xds:///helloworld-dubbogo:8001
+      value: xds:///dubbogo-helloworld:20000
     - name: GRPC_XDS_BOOTSTRAP
       value: xds_bootstrap.json
   ports:
     - name: uvicorn
       containerPort: 5000
       protocol: TCP
-  volumeMounts:
-    - mountPath: /var/run/secrets/token
-      name: istio-token
+#  volumeMounts:
+#    - mountPath: /var/run/secrets/token
+#      name: istio-token
 
-volumes:
-  - name: istio-token
-    projected:
-      sources:
-        - serviceAccountToken:
-            audience: istio-ca
-            path: istio-token
+#volumes:
+#  - name: istio-token
+#    projected:
+#      sources:
+#        - serviceAccountToken:
+#            audience: istio-ca
+#            path: istio-token
 
 imagePullSecrets:
   - name: regcred

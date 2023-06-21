@@ -1,13 +1,13 @@
 dubbo:
-  registries:
-    demoZK:
-      protocol: etcdv3
-      address: 127.0.0.1:2379
+#  registries:
+#    demoZK:
+#      protocol: etcdv3
+#      address: 127.0.0.1:2379
   protocols:
     triple:
       name: tri
       port: 20000
   provider:
     services:
-      GreeterProvider:
-        interface: com.github.wesleywu.helloworld.Greeter # must be compatible with grpc or dubbo-java
+      GreeterServerImpl:
+        interface: ""

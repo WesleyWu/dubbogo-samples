@@ -3,7 +3,7 @@ replicaCount: 3
 image:
   repository: ccr.ccs.tencentyun.com/wumengye/dubbo-go-server
   pullPolicy: Always
-  tag: "1.0.4"
+  tag: "1.0.6"
 
 # Dubbo-go-mesh version control labels
 version:
@@ -46,4 +46,4 @@ service:
   portName: triple
 
 gkeNeg:
-  name: example-dubbo-go-server
+  name: dubbogo-helloworld-service-neg

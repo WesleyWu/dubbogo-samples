@@ -13,11 +13,11 @@
     }
   ],
   "node": {
-    "id": "projects/17018751276/networks/default/nodes/1abb650b-b1c1-4f7e-ac00-116fc1921cb9",
+    "id": "projects/321023226875/networks/default/nodes/1abb650b-b1c1-4f7e-ac00-116fc1921cb9",
     "cluster": "cluster",
     "metadata": {
       "INSTANCE_IP": "{POD_IP}",
-      "TRAFFICDIRECTOR_GCP_PROJECT_NUMBER": "17018751276",
+      "TRAFFICDIRECTOR_GCP_PROJECT_NUMBER": "321023226875",
       "TRAFFICDIRECTOR_NETWORK_NAME": "default"
     },
     "locality": {

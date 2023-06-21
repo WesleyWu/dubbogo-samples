@@ -1,5 +1,5 @@
 IMAGE = ccr.ccs.tencentyun.com/wumengye/dubbo-go-python-client
-TAG = 1.0.11
+TAG = 1.0.12
 HELM_INSTALL_NAME = dubbo-go-python-client
 
 install:
