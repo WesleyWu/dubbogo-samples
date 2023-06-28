@@ -1,5 +1,5 @@
 IMAGE = ccr.ccs.tencentyun.com/wumengye/dubbo-go-client
-TAG = 1.0.1
+TAG = 1.0.7
 HELM_INSTALL_NAME = dubbo-go-client
 
 build-amd64-app:
@@ -8,6 +8,7 @@ build-amd64-app:
 build: proto-gen tidy build-amd64-app
 	cp ./conf/dubbogo.yaml ./build/dubbogo.yaml
 	cp ./manifest/config/config.toml ./build/gf.toml
+	cp ./xds_bootstrap.json ./build
 	docker build ./build -t ${IMAGE}:${TAG}
 	docker push ${IMAGE}:${TAG}
 	make clean
@@ -24,8 +25,14 @@ buildx-publish: proto-gen tidy build-amd64-app
 remove:
 	helm uninstall ${HELM_INSTALL_NAME}
 
+deploy-gke:
+	helm install ${HELM_INSTALL_NAME} ./chart/gke
+
 deploy:
 	helm install ${HELM_INSTALL_NAME} ./chart/app
+
+upgrade-gke:
+	helm upgrade ${HELM_INSTALL_NAME} ./chart/gke
 
 upgrade:
 	helm upgrade ${HELM_INSTALL_NAME} ./chart/app
@@ -44,6 +51,7 @@ clean:
 	rm ./build/dubbogo.yaml
 	rm ./build/gf.toml
 	rm ./build/app
+	rm ./build/xds_bootstrap.json
 
 tidy:
 	go mod tidy

@@ -19,6 +19,8 @@ package main
 
 import (
 	"context"
+	"sync"
+	"time"
 
 	api "dubbo-go-client/api"
 	"dubbo.apache.org/dubbo-go/v3/config"
@@ -27,6 +29,7 @@ import (
 	"github.com/dubbogo/gost/log/logger"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
+	"github.com/gogf/gf/v2/os/gtime"
 )
 
 var grpcGreeterImpl = new(api.GreeterClientImpl)
@@ -41,6 +44,7 @@ func main() {
 	SayHelloTo("Wesley Wu")
 	s := g.Server()
 	s.BindHandler("/hello", SayHelloHandler)
+	s.BindHandler("/benchmark", BenchmarkHandler)
 	s.Run()
 }
 
@@ -67,4 +71,35 @@ func SayHelloHandler(r *ghttp.Request) {
 		return
 	}
 	r.Response.WritelnExit(reply.Message)
+}
+
+func BenchmarkHandler(r *ghttp.Request) {
+	name := r.Get("name", "Wesley Wu").String()
+	req := &api.HelloRequest{
+		Name: name,
+	}
+	times := r.Get("times", 100).Int()
+
+	var wg sync.WaitGroup
+	start := gtime.Now()
+	mu := sync.Mutex{}
+	for index := 0; index < times; index++ {
+		wg.Add(1)
+		go func(ctx context.Context) {
+			defer wg.Done()
+			reply, err := grpcGreeterImpl.SayHello(context.Background(), req)
+			if err != nil {
+				g.Log().Errorf(ctx, "%+v", err)
+				r.Response.WriteStatusExit(500, err.Error())
+				return
+			}
+			mu.Lock()
+			r.Response.Writeln(reply.Message)
+			mu.Unlock()
+		}(r.Context())
+	}
+	wg.Wait()
+	end := gtime.Now()
+	elapsed := int64(end.Sub(start) / time.Millisecond)
+	r.Response.WritefExit("call rpc %d times, %s elapsed milliseconds", times, elapsed)
 }

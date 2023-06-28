@@ -6,7 +6,6 @@ ENV DUBBO_GO_CONFIG_PATH=dubbogo.yaml
 ENV GF_GCFG_FILE=gf.toml
 
 COPY ./app /app/app
-COPY ./dubbogo.yaml /app/dubbogo.yaml
 COPY ./gf.toml /app/gf.toml
 COPY ./xds_bootstrap.json /app/xds_bootstrap.json
 

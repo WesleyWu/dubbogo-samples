@@ -1,10 +1,6 @@
 dubbo:
-  registries:
-    xds:
-      protocol: xds
-      address: istiod.istio-system.svc.cluster.local:15010
   consumer:
     references:
       GreeterClientImpl:
+        url: xds:///dubbogo-helloworld:20000
         protocol: tri
-        interface: "" # read from stub

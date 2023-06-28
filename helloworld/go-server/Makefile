@@ -1,5 +1,5 @@
 IMAGE = ccr.ccs.tencentyun.com/wumengye/dubbo-go-server
-TAG = 1.0.6
+TAG = 1.0.7
 SERVICE_NAME = dubbogo-helloworld
 SERVICE_GRPC_PORT = 20000
 HELM_INSTALL_NAME = ${SERVICE_NAME}-server-v1

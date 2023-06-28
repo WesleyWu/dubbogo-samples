@@ -3,7 +3,7 @@ replicaCount: 3
 image:
   repository: ccr.ccs.tencentyun.com/wumengye/dubbo-go-server
   pullPolicy: Always
-  tag: "1.0.6"
+  tag: "1.0.7"
 
 # Dubbo-go-mesh version control labels
 version:

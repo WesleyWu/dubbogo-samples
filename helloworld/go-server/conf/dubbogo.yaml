@@ -1,8 +1,4 @@
 dubbo:
-#  registries:
-#    xds:
-#      protocol: xds
-#      address: istiod.istio-system.svc.cluster.local:15010
   protocols:
     triple:
       name: tri
@@ -11,3 +7,28 @@ dubbo:
     services:
       GreeterServerImpl:
         interface: "" # read from stub
+  logger:
+    zap-config:
+      level: info # 日志级别
+      development: false
+      disableCaller: false
+      disableStacktrace: false
+      encoding: "console"
+      # zap encoder 配置
+      encoderConfig:
+        messageKey: "message"
+        levelKey: "level"
+        timeKey: "time"
+        nameKey: "logger"
+        callerKey: "caller"
+        stacktraceKey: "stacktrace"
+        lineEnding: ""
+        levelEncoder: "capitalColor"
+        timeEncoder: "iso8601"
+        durationEncoder: "seconds"
+        callerEncoder: "short"
+        nameEncoder: ""
+      outputPaths:
+        - "stdout"
+      errorOutputPaths:
+        - "stderr"

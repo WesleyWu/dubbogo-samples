@@ -1,0 +1,69 @@
+replicaCount: 1
+
+image:
+  repository: ccr.ccs.tencentyun.com/wumengye/dubbo-go-client
+  pullPolicy: Always
+  tag: "1.0.7"
+
+# Dubbo-go-mesh version control labels
+version:
+  labels:
+    dubbogoAppVersion: v1
+
+container:
+  env:
+    - name: POD_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.name
+    - name: POD_NAMESPACE
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.namespace
+    - name: SERVICE_ENDPOINT
+      value: xds:///dubbogo-helloworld:20000
+    - name: GRPC_XDS_BOOTSTRAP
+      value: xds_bootstrap.json
+  ports:
+    - name: goframe
+      containerPort: 8200
+      protocol: TCP
+
+
+imagePullSecrets:
+  - name: regcred
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+# fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+# runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 18200
+  portName: goframe
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
