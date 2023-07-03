@@ -23,55 +23,29 @@ package main
 import (
 	"context"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	api "dubbo-go-client/api"
-	"github.com/gogf/gf/v2/errors/gerror"
+	"dubbo-go-client/greeter"
+	"github.com/WesleyWu/go-lifespan/lifespan"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/gctx"
-	"github.com/gogf/gf/v2/os/genv"
 	"github.com/gogf/gf/v2/os/gtime"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	"github.com/panjf2000/ants/v2"
 	_ "google.golang.org/grpc/xds" // To install the xds resolvers and balancers.
 )
 
-var (
-	conn    *grpc.ClientConn
-	greeter api.GreeterClient
-)
-
-func makeConnection(ctx context.Context) (conn *grpc.ClientConn, grpcGreeterImpl api.GreeterClient, err error) {
-	serviceEndpoint := genv.Get("SERVICE_ENDPOINT", "").String()
-	if serviceEndpoint == "" {
-		err = gerror.New("SERVICE_ENDPOINT env not set")
-		return
-	}
-	conn, err = grpc.Dial(serviceEndpoint, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		g.Log().Fatalf(ctx, "grpc.Dial(%s) failed: %v", serviceEndpoint, err)
-		return
-	}
-	grpcGreeterImpl = api.NewGreeterClient(conn)
-	return
-}
-
 func main() {
-	var err error
 	ctx := gctx.New()
-	conn, greeter, err = makeConnection(ctx)
-	if err != nil {
-		panic(err)
-	}
-	defer func(conn *grpc.ClientConn) {
-		_ = conn.Close()
-	}(conn)
+	lifespan.OnBootstrap(ctx)
 	SayHelloTo(ctx, "Wesley Wu")
 	s := g.Server()
 	s.BindHandler("/hello", SayHelloHandler)
 	s.BindHandler("/benchmark", BenchmarkHandler)
 	s.Run()
+	lifespan.OnShutdown(ctx)
 }
 
 func SayHelloTo(ctx context.Context, name string) {
@@ -101,6 +75,8 @@ func SayHelloHandler(r *ghttp.Request) {
 
 func BenchmarkHandler(r *ghttp.Request) {
 	name := r.Get("name", "Wesley Wu").String()
+	n := r.Get("n", 10).Int()
+	defer ants.Release()
 	req := &api.HelloRequest{
 		Name: name,
 	}
@@ -108,24 +84,38 @@ func BenchmarkHandler(r *ghttp.Request) {
 
 	var wg sync.WaitGroup
 	start := gtime.Now()
-	mu := sync.Mutex{}
-	for index := 0; index < times; index++ {
-		wg.Add(1)
-		go func(ctx context.Context) {
-			defer wg.Done()
-			reply, err := greeter.SayHello(context.Background(), req)
+
+	ctx := r.Context()
+	calls := atomic.Int64{}
+	pool, err := ants.NewPoolWithFunc(n, func(i interface{}) {
+		defer wg.Done()
+		select {
+		case <-ctx.Done():
+			return
+		default:
+			_, err := greeter.SayHello(ctx, i.(*api.HelloRequest))
 			if err != nil {
 				g.Log().Errorf(ctx, "%+v", err)
 				r.Response.WriteStatusExit(500, err.Error())
 				return
 			}
-			mu.Lock()
-			r.Response.Writeln(reply.Message)
-			mu.Unlock()
-		}(r.Context())
+			calls.Add(1)
+		}
+	})
+	if err != nil {
+		g.Log().Errorf(ctx, "%+v", err)
+		r.Response.WriteStatusExit(500, err.Error())
+		return
+	}
+	defer pool.Release()
+	for index := 0; index < times; index++ {
+		wg.Add(1)
+		_ = pool.Invoke(req)
 	}
 	wg.Wait()
 	end := gtime.Now()
 	elapsed := int64(end.Sub(start) / time.Millisecond)
-	r.Response.WritefExit("call rpc %d times, %d elapsed milliseconds", times, elapsed)
+	cps := int64(times) * 1000 / elapsed
+	g.Log().Infof(ctx, "call rpc %d times, %d elapsed milliseconds, %d calls per second", calls.Load(), elapsed, cps)
+	r.Response.WritefExit("call rpc %d times, %d elapsed milliseconds, %d calls per second", calls.Load(), elapsed, cps)
 }

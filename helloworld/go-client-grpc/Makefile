@@ -1,9 +1,9 @@
 IMAGE = ccr.ccs.tencentyun.com/wumengye/dubbo-go-client-grpc
-TAG = 1.0.5
+TAG = 1.0.13
 HELM_INSTALL_NAME = dubbo-go-client-grpc
 
 build-amd64-app:
-	GOOS=linux GOARCH=amd64 go build -o build/app ./cmd
+	GOOS=linux GOARCH=amd64 go build -o build/app main.go
 
 build: proto-gen tidy build-amd64-app
 	cp ./manifest/config/config.toml ./build/gf.toml
@@ -19,7 +19,7 @@ deploy:
 	helm install ${HELM_INSTALL_NAME} ./chart/gke
 
 upgrade:
-	helm upgrade ${HELM_INSTALL_NAME} --wait ./chart/gke
+	helm upgrade ${HELM_INSTALL_NAME} ./chart/gke
 
 proto-gen:
 	buf generate ../proto/helloworld.proto

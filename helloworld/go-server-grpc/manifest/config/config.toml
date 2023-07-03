@@ -1,0 +1,6 @@
+[grpc]
+    address = ":20000"
+
+[logger]
+    level = "info"
+    flags = 44
